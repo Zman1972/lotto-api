@@ -16,5 +16,35 @@
     "drawDate": "2026-07-26",
     "numbers": [5, 10, 18, 27, 35, 42],
     "bonus": 9
+  },
+  {
+    "game": "PowerBall",
+    "drawDate": "2026-07-31",
+    "numbers": [4, 11, 19, 27, 36],
+    "bonus": 9
+  },
+  {
+    "game": "PowerBall",
+    "drawDate": "2026-07-28",
+    "numbers": [8, 15, 22, 33, 47],
+    "bonus": 18
+  },
+  {
+    "game": "Lotto Plus 1",
+    "drawDate": "2026-07-31",
+    "numbers": [2, 9, 14, 21, 38, 49],
+    "bonus": 16
+  },
+  {
+    "game": "Lotto Plus 2",
+    "drawDate": "2026-07-31",
+    "numbers": [6, 13, 20, 29, 40, 52],
+    "bonus": 11
+  },
+  {
+    "game": "Daily Lotto",
+    "drawDate": "2026-07-31",
+    "numbers": [5, 12, 18, 23, 31],
+    "bonus": 0
   }
 ]
