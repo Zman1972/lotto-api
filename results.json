@@ -1,6 +1,20 @@
-{
-  "game": "SA Lotto",
-  "drawDate": "2026-07-31",
-  "numbers": [3, 7, 15, 22, 31, 44],
-  "bonus": 18
-}
+[
+  {
+    "game": "SA Lotto",
+    "drawDate": "2026-07-31",
+    "numbers": [3, 7, 15, 22, 31, 44],
+    "bonus": 18
+  },
+  {
+    "game": "SA Lotto",
+    "drawDate": "2026-07-29",
+    "numbers": [1, 8, 19, 24, 37, 45],
+    "bonus": 12
+  },
+  {
+    "game": "SA Lotto",
+    "drawDate": "2026-07-26",
+    "numbers": [5, 10, 18, 27, 35, 42],
+    "bonus": 9
+  }
+]
