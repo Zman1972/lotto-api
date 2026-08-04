@@ -1,23 +1,27 @@
 package com.shudley.lottocombinationgenerator.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.shudley.lottocombinationgenerator.components.LotteryBall
+import com.shudley.lottocombinationgenerator.models.Game
 import com.shudley.lottocombinationgenerator.network.LotteryRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
+import org.json.JSONArray
 
 @Composable
-fun ResultsScreen() {
+fun ResultsScreen(selectedGame: Game) {
 
     var results by remember {
-        mutableStateOf("Press Load Results")
+        mutableStateOf<List<ResultItem>>(emptyList())
     }
 
     val scope = rememberCoroutineScope()
@@ -26,10 +30,11 @@ fun ResultsScreen() {
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
+            .verticalScroll(rememberScrollState())
     ) {
 
         Text(
-            text = "Latest Lottery Results",
+            text = "Latest ${selectedGame.name} Results",
             style = MaterialTheme.typography.headlineMedium
         )
 
@@ -38,49 +43,48 @@ fun ResultsScreen() {
         Button(
             onClick = {
 
-                results = "Loading..."
-
                 scope.launch(Dispatchers.IO) {
 
-                    val json = LotteryRepository.getLatestResults()
+                    try {
 
-                    val formatted = try {
+                        val json = LotteryRepository.getLatestResults()
 
-                        val obj = JSONObject(json)
+                        val array = JSONArray(json)
 
-                        val game = obj.getString("game")
-                        val drawDate = obj.getString("drawDate")
-                        val numbers = obj.getJSONArray("numbers")
-                        val bonus = obj.getInt("bonus")
+                        val list = mutableListOf<ResultItem>()
 
-                        val nums = buildString {
-                            for (i in 0 until numbers.length()) {
-                                append(numbers.getInt(i))
-                                if (i < numbers.length() - 1) append(" • ")
+                        for (i in 0 until array.length()) {
+
+                            val obj = array.getJSONObject(i)
+
+                            val numsJson = obj.getJSONArray("numbers")
+
+                            val nums = mutableListOf<Int>()
+
+                            for (j in 0 until numsJson.length()) {
+                                nums.add(numsJson.getInt(j))
                             }
+
+                            list.add(
+                                ResultItem(
+                                    game = obj.getString("game"),
+                                    drawDate = obj.getString("drawDate"),
+                                    numbers = nums,
+                                    bonus = obj.getInt("bonus")
+                                )
+                            )
                         }
 
-                        """
-🎱 $game
-
-📅 Draw Date
-$drawDate
-
-🔢 Winning Numbers
-$nums
-
-⭐ Bonus Ball
-$bonus
-                        """.trimIndent()
+                        withContext(Dispatchers.Main) {
+                            results = list
+                        }
 
                     } catch (e: Exception) {
-                        json
+                        e.printStackTrace()
                     }
 
-                    withContext(Dispatchers.Main) {
-                        results = formatted
-                    }
                 }
+
             }
         ) {
             Text("Load Results")
@@ -88,9 +92,44 @@ $bonus
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Text(
-            text = results,
-            style = MaterialTheme.typography.bodyLarge
-        )
+        results.forEach { result ->
+
+            Text("🎱 ${result.game}")
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            Text("📅 ${result.drawDate}")
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Row {
+
+                result.numbers.forEach {
+
+                    LotteryBall(number = it)
+
+                    Spacer(modifier = Modifier.width(6.dp))
+                }
+
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Text("⭐ Bonus Ball")
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            LotteryBall(number = result.bonus)
+
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+
     }
 }
+
+data class ResultItem(
+    val game: String,
+    val drawDate: String,
+    val numbers: List<Int>,
+    val bonus: Int
+)

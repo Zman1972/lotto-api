@@ -61,7 +61,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 composable("results") {
-                    ResultsScreen()
+                    ResultsScreen(selectedGame)
                 }
 
                 composable("saved") {

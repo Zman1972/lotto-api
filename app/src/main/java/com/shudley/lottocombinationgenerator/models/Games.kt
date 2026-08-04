@@ -3,7 +3,7 @@ package com.shudley.lottocombinationgenerator.models
 val games = listOf(
 
     Game(
-        name = "Lotto",
+        name = "SA Lotto",
         maxNumber = 52,
         numbersToPick = 6
     ),

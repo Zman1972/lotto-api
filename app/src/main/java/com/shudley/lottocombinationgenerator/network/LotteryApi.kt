@@ -8,7 +8,7 @@ object LotteryApi {
     private val client = OkHttpClient()
 
     private const val URL =
-        "https://raw.githubusercontent.com/Zman1972/lotto-api/main/results.json"
+        "https://raw.githubusercontent.com/Zman1972/lotto-api/master/results.json"
 
     fun getLatestResults(): String {
 
